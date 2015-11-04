@@ -1,0 +1,79 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/widget_horizontal_margin"
+    android:paddingRight="@dimen/widget_horizontal_margin"
+    android:paddingTop="@dimen/widget_vertical_margin"
+    android:paddingBottom="@dimen/widget_vertical_margin">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="194dp"
+        android:paddingLeft="@dimen/widget_horizontal_margin"
+        android:paddingRight="@dimen/widget_horizontal_margin"
+        android:paddingTop="@dimen/widget_vertical_margin"
+        android:paddingBottom="@dimen/widget_vertical_margin"
+        tools:context=".DQAppWidgetProvider"
+        android:background="@drawable/eslimi"
+        android:layout_gravity="center"
+        android:id="@+id/relLayout">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="75"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_widgetStart"
+                    android:id="@+id/tTxtView"
+                    android:textSize="15dp"
+                    android:textColor="@color/text_shadow"
+                    android:shadowColor="@color/light_shadow"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:gravity="center_vertical|right"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_widgetStart"
+                    android:id="@+id/hTxtView"
+                    android:textSize="15dp"
+                    android:textColor="@color/light_font"
+                    android:shadowColor="@color/light_shadow"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:gravity="center_vertical|right"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

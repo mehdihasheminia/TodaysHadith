@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="int_Alarm_Interval">60000</integer>   <!-- Wakes up the App every min [ 1 min = 60000 ms ] -->
+
+    <integer name="int_UpdateFactor_Hi">120</integer>  <!-- Update interval in minutes -->
+    <integer name="int_UpdateFactor_Med">480</integer>
+    <integer name="int_UpdateFactor_Low">1440</integer>
+</resources>
