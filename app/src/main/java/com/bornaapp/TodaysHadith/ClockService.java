@@ -9,7 +9,7 @@ import android.os.IBinder;
 
 public class ClockService extends Service {
 
-    //region Service methods
+    //region Service method
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
