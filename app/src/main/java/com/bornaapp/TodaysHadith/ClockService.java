@@ -13,10 +13,6 @@ public class ClockService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //this is another thing
-        int i = 187;
-        i++;
-
         BroadcastUpdateWidget();
         //int passedID = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,-1);
         return START_STICKY;
