@@ -13,13 +13,18 @@ public class ClockService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        //new things
+        int i = 0;
+        i++;
+
         BroadcastUpdateWidget();
         //int passedID = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,-1);
         return START_STICKY;
     }
 
     @Override
-    public void onDestroy() { }
+    public void onDestroy() {
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -28,7 +33,7 @@ public class ClockService extends Service {
     //endregion
 
     //region Broadcasting methods
-    private void BroadcastUpdateWidget(){
+    private void BroadcastUpdateWidget() {
 
         Context context = getApplicationContext();
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
