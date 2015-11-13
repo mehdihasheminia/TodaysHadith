@@ -13,8 +13,8 @@ public class ClockService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //new things
-        int i = 0;
+        //this is another thing
+        int i = 187;
         i++;
 
         BroadcastUpdateWidget();
