@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
-public class ClockService extends Service {
+public class UpdateService extends Service {
 
     //region Service method
     @Override

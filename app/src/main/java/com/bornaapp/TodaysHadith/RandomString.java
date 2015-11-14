@@ -1,10 +1,18 @@
 package com.bornaapp.TodaysHadith;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class RandomString {
+
+    public RandomString(Context _context){
+        context = _context;
+    }
+
+    Context context;
 
     public List<Integer> seqOfNumbers;
     private int iteratorIndex;
@@ -19,7 +27,7 @@ public class RandomString {
 
     public void Init() {
         //Retrieve strings from resources
-        String[] resources = App.get().getResources().getStringArray(R.array.My_String_Array);
+        String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
         //Initialize a random sequence of strings
         seqOfNumbers = new ArrayList<>();
         for (int i = 0; i < resources.length; i++) {
@@ -30,7 +38,7 @@ public class RandomString {
 
     private String GetStringResource(int index) {
         //Retrieve strings from resources
-        String[] resources = App.get().getResources().getStringArray(R.array.My_String_Array);
+        String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
         //return string at specified index
         return resources[index];
     }

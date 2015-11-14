@@ -25,9 +25,9 @@ public class App extends Application {
         instance = this;
 
         if (randomString == null)
-            randomString = new RandomString();
+            randomString = new RandomString(getApplicationContext());
         if (alarm == null)
-            alarm = new Alarm();
+            alarm = new Alarm(getApplicationContext());
     }
 
     public boolean needsInit() {
@@ -37,7 +37,7 @@ public class App extends Application {
     public void Init() {
         randomString.Init();
         try {
-            widgetUpdateRate = SharedPrefs.LoadPref_Int(this.getString(R.string.txt_prefKey_Delay));
+            widgetUpdateRate = SharedPrefs.LoadPref_Int(getApplicationContext(),this.getString(R.string.txt_prefKey_Delay));
         } catch (Exception e) {
             widgetUpdateRate = -1;
         }
