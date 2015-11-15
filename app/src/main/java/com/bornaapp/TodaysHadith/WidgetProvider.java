@@ -78,7 +78,7 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context _context) {
         App.get().alarm.RequestStop();
         App.get().alarm.Set();
-        App.get().stopService(new Intent(App.get(), UpdateService.class));
+        App.get().stopService();
         super.onDisabled(_context);
     }
 

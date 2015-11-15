@@ -1,6 +1,7 @@
 package com.bornaapp.TodaysHadith;
 
 import android.app.Application;
+import android.content.Intent;
 
 public class App extends Application {
 
@@ -99,5 +100,9 @@ public class App extends Application {
         if (change)
             widgetCount = newWidCount;
         return (change);
+    }
+
+    public void stopService(){
+        instance.stopService(new Intent(instance, UpdateService.class));
     }
 }
