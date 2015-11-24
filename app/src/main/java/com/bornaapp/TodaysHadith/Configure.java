@@ -3,7 +3,6 @@ package com.bornaapp.TodaysHadith;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ClipData;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -73,23 +72,14 @@ public class Configure extends Activity {
     //endregion
 
     //region Broadcasting methods
-    private void BroadcastMessage(String _message) {
-        Context context = Configure.this;
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetProvider.class.getName());
-        Intent updateIntent = new Intent(context, WidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
-        updateIntent.setAction(_message);
-        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-        context.sendBroadcast(updateIntent);
-    }
-
-    private void BroadcastPauseWidget() {
-        BroadcastMessage("com.bornaapp.appwidget.action.APPWIDGET_PAUSE");
+     private void BroadcastPauseWidget() {
+         WidgetMessageSender messageSender = new WidgetMessageSender(this);
+         messageSender.Broadcast("com.bornaapp.appwidget.action.APPWIDGET_PAUSE");
     }
 
     private void BroadcastResumeWidget() {
-        BroadcastMessage("android.appwidget.action.APPWIDGET_UPDATE");
+        WidgetMessageSender messageSender = new WidgetMessageSender(this);
+        messageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
     }
     //endregion
 

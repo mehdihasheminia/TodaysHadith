@@ -1,9 +1,6 @@
 package com.bornaapp.TodaysHadith;
 
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -13,7 +10,9 @@ public class UpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        BroadcastUpdateWidget();
+        WidgetMessageSender messageSender = new WidgetMessageSender(getApplicationContext());
+        messageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
+
         //int passedID = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,-1);
         return START_STICKY;
     }
@@ -25,20 +24,6 @@ public class UpdateService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-    //endregion
-
-    //region Broadcasting methods
-    private void BroadcastUpdateWidget() {
-
-        Context context = getApplicationContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetProvider.class.getName());
-        Intent updateIntent = new Intent(context, WidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
-        updateIntent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
-        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-        context.sendBroadcast(updateIntent);
     }
     //endregion
 }
