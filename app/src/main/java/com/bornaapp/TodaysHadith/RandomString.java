@@ -19,7 +19,7 @@ public class RandomString {
         new RandomString();
 
         //Retrieve strings from resources
-        String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
+       // String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
 
         //Initialize a random sequence of strings
         instance.seqOfNumbers = new ArrayList<>();
