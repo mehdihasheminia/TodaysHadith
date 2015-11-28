@@ -13,15 +13,14 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
 
         // processing received intents
-        //
         if (intent.getAction().equals("com.bornaapp.appwidget.action.APPWIDGET_PAUSE")) {
-            App.get().alarm.RequestStop();
-            App.get().alarm.Set();
+            App.get().updateAlarm.RequestStop();
+            App.get().updateAlarm.Set();
         } else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
-            App.get().alarm.RequestStart();
+            App.get().updateAlarm.RequestStart();
         }
+
         //running onUpdate(), onDisabled() & ... operations
-        //
         super.onReceive(context, intent);
     }
 
@@ -29,16 +28,16 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         //1st time initialization
-        if (App.get().needsInit()) {
-            App.get().Init();
-            App.get().UpdateASAP();
-        }
+        if (!RandomString.isInitialized())
+            RandomString.init();
+        if(!UpdateAlarm.isInitialized())
+            UpdateAlarm.init();
 
         //Update Alarm state
-        App.get().alarm.Set();
+        App.get().updateAlarm.Set();
 
         if (App.get().TimeToUpdate()) {
-            App.get().randomString.Next();
+            RandomString.next();
             UpdateText(context, appWidgetManager, appWidgetIds);
         } else if (App.get().ShouldForceUpdate()) {
             UpdateText(context, appWidgetManager, appWidgetIds);
@@ -62,7 +61,7 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.tTxtView, pendingIntent);
             views.setOnClickPendingIntent(R.id.hTxtView, pendingIntent);
             //update Text fields
-            String[] separated = App.get().randomString.Current().split("::");
+            String[] separated = RandomString.current().split("::");
             views.setTextViewText(R.id.hTxtView, separated[0]);
             views.setTextViewText(R.id.tTxtView, separated[1]);
             App.get().UpdateDone();
@@ -90,8 +89,8 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context _context) {
-        App.get().alarm.RequestStop();
-        App.get().alarm.Set();
+        App.get().updateAlarm.RequestStop();
+        App.get().updateAlarm.Set();
         App.get().stopService();
         super.onDisabled(_context);
     }

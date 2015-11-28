@@ -1,18 +1,27 @@
 package com.bornaapp.TodaysHadith;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 
 public class App extends Application {
 
-    private static App instance;
+    private static App instance = null;
+
+    private App() {
+        instance = this;
+    }
+
+    public static Context getContext() {
+        return instance;
+    }
+
+    //////////////////
 
     public static App get() {
         return instance;
     }
-
-    public RandomString randomString;
-    public Alarm alarm;
+    public UpdateAlarm updateAlarm;
 
     private int updateCounter;
     private int widgetUpdateRate;
@@ -23,20 +32,17 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
 
-        if (randomString == null)
-            randomString = new RandomString(getApplicationContext());
-        if (alarm == null)
-            alarm = new Alarm(getApplicationContext());
+        // Singleton private instantiation
+        new App();
     }
 
     public boolean needsInit() {
-        return !randomString.IsInitialized();
+        return false;
     }
 
     public void Init() {
-        randomString.Init();
+
         try {
             widgetUpdateRate = SharedPrefs.LoadPref_Int(getApplicationContext(),this.getString(R.string.txt_prefKey_Delay));
         } catch (Exception e) {
@@ -106,3 +112,5 @@ public class App extends Application {
         instance.stopService(new Intent(instance, UpdateService.class));
     }
 }
+
+//Todo: here!!! UML is not synced!

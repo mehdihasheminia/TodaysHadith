@@ -1,7 +1,5 @@
 package com.bornaapp.TodaysHadith;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,17 +7,33 @@ import java.util.List;
 public class RandomString {
 
     private static RandomString instance = null;
+    private List<Integer> seqOfNumbers;
+    private int iteratorIndex;
 
-    private RandomString(){
+    //ctor
+    private RandomString() {
         instance = this;
     }
 
-    public static void init(){
-        //private instantiation
+    //private methods
+    private static String getStringResource(int index) {
+        //Retrieve strings from resources
+        String[] resources = App.getContext().getResources().getStringArray(R.array.My_String_Array);
+        //return string at specified index
+        return resources[index];
+    }
+
+    //public methods
+    public static boolean isInitialized() {
+        return (instance != null);
+    }
+
+    public static void init() {
+        // Singleton private instantiation
         new RandomString();
 
         //Retrieve strings from resources
-       // String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
+        String[] resources = App.getContext().getResources().getStringArray(R.array.My_String_Array);
 
         //Initialize a random sequence of strings
         instance.seqOfNumbers = new ArrayList<>();
@@ -29,52 +43,27 @@ public class RandomString {
         Collections.shuffle(instance.seqOfNumbers);
     }
 
-    public List<Integer> seqOfNumbers;
-    private int iteratorIndex;
-
-    public boolean IsInitialized() {
-        try {
-            return !seqOfNumbers.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
+    public static String current() {
+        return getStringResource(instance.seqOfNumbers.get(instance.iteratorIndex));
     }
 
-    private String GetStringResource(int index) {
-        //Retrieve strings from resources
-        String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
-        //return string at specified index
-        return resources[index];
-    }
+    public static String next() {
 
-    public String Current() {
-        if (!IsInitialized())
-            return "";
-
-        return GetStringResource(seqOfNumbers.get(iteratorIndex));
-    }
-
-    public String Next() {
-        if (!IsInitialized())
-            return "";
-
-        if (iteratorIndex < seqOfNumbers.size() - 1)
-            iteratorIndex++;
+        if (instance.iteratorIndex < instance.seqOfNumbers.size() - 1)
+            instance.iteratorIndex++;
         else
-            iteratorIndex = 0;
+            instance.iteratorIndex = 0;
 
-        return GetStringResource(seqOfNumbers.get(iteratorIndex));
+        return getStringResource(instance.seqOfNumbers.get(instance.iteratorIndex));
     }
 
-    public String Previous() {
-        if (!IsInitialized())
-            return "";
+    public static String previous() {
 
-        if (iteratorIndex > 0)
-            iteratorIndex--;
+        if (instance.iteratorIndex > 0)
+            instance.iteratorIndex--;
         else
-            iteratorIndex = seqOfNumbers.size() - 1;
+            instance.iteratorIndex = instance.seqOfNumbers.size() - 1;
 
-        return GetStringResource(seqOfNumbers.get(iteratorIndex));
+        return getStringResource(instance.seqOfNumbers.get(instance.iteratorIndex));
     }
 }
