@@ -8,11 +8,26 @@ import java.util.List;
 
 public class RandomString {
 
-    public RandomString(Context _context){
-        context = _context;
+    private static RandomString instance = null;
+
+    private RandomString(){
+        instance = this;
     }
 
-    Context context;
+    public static void init(){
+        //private instantiation
+        new RandomString();
+
+        //Retrieve strings from resources
+        String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
+
+        //Initialize a random sequence of strings
+        instance.seqOfNumbers = new ArrayList<>();
+        for (int i = 0; i < resources.length; i++) {
+            instance.seqOfNumbers.add(i);
+        }
+        Collections.shuffle(instance.seqOfNumbers);
+    }
 
     public List<Integer> seqOfNumbers;
     private int iteratorIndex;
@@ -23,17 +38,6 @@ public class RandomString {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public void Init() {
-        //Retrieve strings from resources
-        String[] resources = context.getResources().getStringArray(R.array.My_String_Array);
-        //Initialize a random sequence of strings
-        seqOfNumbers = new ArrayList<>();
-        for (int i = 0; i < resources.length; i++) {
-            seqOfNumbers.add(i);
-        }
-        Collections.shuffle(seqOfNumbers);
     }
 
     private String GetStringResource(int index) {
