@@ -14,10 +14,9 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
 
         // processing received intents
         if (intent.getAction().equals("com.bornaapp.appwidget.action.APPWIDGET_PAUSE")) {
-            App.get().updateAlarm.RequestStop();
-            App.get().updateAlarm.Set();
+            Timer.stop();
         } else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
-            App.get().updateAlarm.RequestStart();
+            Timer.start();
         }
 
         //running onUpdate(), onDisabled() & ... operations
@@ -27,26 +26,13 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        //1st time initialization
-        if (!RandomString.isInitialized())
-            RandomString.init();
-        if(!UpdateAlarm.isInitialized())
-            UpdateAlarm.init();
-
-        //Update Alarm state
-        App.get().updateAlarm.Set();
-
-        if (App.get().TimeToUpdate()) {
+        if (Timer.getElapsedMinutes() >= getWidgetUpdateRateFromPrefs()) {
+            Timer.reset();
             RandomString.next();
-            UpdateText(context, appWidgetManager, appWidgetIds);
-        } else if (App.get().ShouldForceUpdate()) {
-            UpdateText(context, appWidgetManager, appWidgetIds);
-        } else if (App.get().WidgetCountChanged(appWidgetIds.length)) {
-            UpdateText(context, appWidgetManager, appWidgetIds);
-        } else {
-            UpdateControl(context, appWidgetManager, appWidgetIds);
+
         }
-        App.get().PrepareForNextUpdate();
+        UpdateText(context, appWidgetManager, appWidgetIds);
+        Timer.Update();
     }
 
     private void UpdateText(Context _context, AppWidgetManager _appWidgetManager, int[] _appWidgetIds) {
@@ -64,33 +50,23 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
             String[] separated = RandomString.current().split("::");
             views.setTextViewText(R.id.hTxtView, separated[0]);
             views.setTextViewText(R.id.tTxtView, separated[1]);
-            App.get().UpdateDone();
             //Update AppWidget
             _appWidgetManager.updateAppWidget(widgetId, views);
-        }
-        App.get().CancelForceupdate();
-    }
-
-    private void UpdateControl(Context _context, AppWidgetManager _appWidgetManager, int[] _appWidgetIds) {
-        //query each appWidget
-        for (int currentWidgetId : _appWidgetIds) {
-            //access remote view
-            RemoteViews views = new RemoteViews(_context.getPackageName(), R.layout.widgetlayout);
-            Intent intent = new Intent(_context, Configure.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, currentWidgetId);
-            PendingIntent pendingIntent = PendingIntent.getActivity(_context, 0,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setOnClickPendingIntent(R.id.tTxtView, pendingIntent);
-            views.setOnClickPendingIntent(R.id.hTxtView, pendingIntent);
-            //Update AppWidget
-            _appWidgetManager.updateAppWidget(currentWidgetId, views);
         }
     }
 
     @Override
+    public void onEnabled(Context _context) {
+        //1st time initialization
+        if (!RandomString.isInitialized())
+            RandomString.init();
+        if (!Timer.isInitialized())
+            Timer.init();
+    }
+
+    @Override
     public void onDisabled(Context _context) {
-        App.get().updateAlarm.RequestStop();
-        App.get().updateAlarm.Set();
+        Timer.stop();
         App.get().stopService();
         super.onDisabled(_context);
     }
@@ -99,5 +75,19 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     public void onDeleted(Context _context, int[] _appWidgetIds) {
         App.get().WidgetCountChanged(_appWidgetIds.length);
         super.onDeleted(_context, _appWidgetIds);
+    }
+
+    private int getWidgetUpdateRateFromPrefs() {
+        Context context = App.getContext();
+        int widgetUpdateRate;
+        try {
+            widgetUpdateRate = SharedPrefs.LoadPref_Int(context, context.getString(R.string.txt_prefKey_Delay));
+        } catch (Exception e) {
+            widgetUpdateRate = -1;
+        }
+        if (widgetUpdateRate < 0) {
+            widgetUpdateRate = context.getResources().getInteger(R.integer.int_UpdateFactor_Low);
+        }
+        return widgetUpdateRate;
     }
 }

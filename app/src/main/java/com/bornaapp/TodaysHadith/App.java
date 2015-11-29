@@ -18,10 +18,9 @@ public class App extends Application {
 
     //////////////////
 
-    public static App get() {
-        return instance;
+    public static App get(){
+    return instance;
     }
-    public UpdateAlarm updateAlarm;
 
     private int updateCounter;
     private int widgetUpdateRate;
@@ -112,5 +111,3 @@ public class App extends Application {
         instance.stopService(new Intent(instance, UpdateService.class));
     }
 }
-
-//Todo: here!!! UML is not synced!
