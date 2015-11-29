@@ -29,12 +29,17 @@ public class Timer {
         new Timer();
     }
 
-    public static void start() {
+    public static void run() {
         run(true);
     }
 
-    public static void stop() {
+    public static void pause() {
         run(false);
+    }
+
+    public static void stop(){
+        Context context = App.getContext();
+        context.stopService(new Intent(context, UpdateService.class));
     }
 
     public static void Update() {
