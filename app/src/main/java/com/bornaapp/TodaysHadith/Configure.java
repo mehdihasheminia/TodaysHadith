@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.net.Uri;
 
 public class Configure extends Activity {
@@ -35,7 +34,7 @@ public class Configure extends Activity {
         setContentView(R.layout.configurelayout);
 
         //Update configuration UI
-        UpdateText(App.get().randomString.Current());
+        UpdateTextView();
 
         // Bind the action for the buttons.
         findViewById(R.id.nextBtn).setOnClickListener(mOnClickNextBtn);
@@ -46,7 +45,7 @@ public class Configure extends Activity {
         findViewById(R.id.suggestBtn).setOnClickListener(mOnClickSuggestBtn);
 
         // Bind the action for the Spinner.
-        RepositionSpinner();
+        UpdateSpinner();
         Spinner tmpSpinner = (Spinner) findViewById(R.id.spinner);
         tmpSpinner.setOnItemSelectedListener(new SpinnerItemSelectListener());
 
@@ -72,9 +71,9 @@ public class Configure extends Activity {
     //endregion
 
     //region Broadcasting methods
-     private void BroadcastPauseWidget() {
-         WidgetMessageSender messageSender = new WidgetMessageSender(this);
-         messageSender.Broadcast("com.bornaapp.appwidget.action.APPWIDGET_PAUSE");
+    private void BroadcastPauseWidget() {
+        WidgetMessageSender messageSender = new WidgetMessageSender(this);
+        messageSender.Broadcast("com.bornaapp.appwidget.action.APPWIDGET_PAUSE");
     }
 
     private void BroadcastResumeWidget() {
@@ -84,27 +83,28 @@ public class Configure extends Activity {
     //endregion
 
     //region User Interface
-    private void UpdateText(String txt) {
+    private void UpdateTextView() {
+        String txt = RandomString.current();
         String[] separated = txt.split("::");
 
         if (separated.length > 1)
             txt = separated[0] + " " + separated[1];
 
-        TextView tmpTxtView = (TextView) findViewById(R.id.quoteTxtView2);
-        tmpTxtView.setText(txt);
+        TextView textView = (TextView) findViewById(R.id.quoteTxtView2);
+        textView.setText(txt);
     }
 
     View.OnClickListener mOnClickNextBtn = new View.OnClickListener() {
         public void onClick(View v) {
-            UpdateText(App.get().randomString.Next());
-            App.get().Forceupdate();
+            RandomString.next();
+            UpdateTextView();
         }
     };
 
     View.OnClickListener mOnClickPrevBtn = new View.OnClickListener() {
         public void onClick(View v) {
-            UpdateText(App.get().randomString.Previous());
-            App.get().Forceupdate();
+            RandomString.previous();
+            UpdateTextView();
         }
     };
 
@@ -113,7 +113,7 @@ public class Configure extends Activity {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
 
-            String shareBody = App.get().randomString.Current();
+            String shareBody = RandomString.current(); //<--------------------------------------TODO!
             String[] separated = shareBody.split("::");
             if (separated.length > 1)
                 shareBody = separated[0] + " " + separated[1];
@@ -128,7 +128,7 @@ public class Configure extends Activity {
         public void onClick(View v) {
 
             //Copy text to clipboard
-            String txt = App.get().randomString.Current();
+            String txt = RandomString.current();
             String[] separated = txt.split("::");
             if (separated.length > 1)
                 txt = separated[0] + " " + separated[1];
@@ -144,16 +144,14 @@ public class Configure extends Activity {
                     clipboardMgr.setPrimaryClip(clip);
                 }
             }
-
             //Let user know
-            Context context = Configure.this;
-            Toast.makeText(context, context.getString(R.string.txt_copy_message), Toast.LENGTH_SHORT).show();
+            App.Toast(getApplicationContext().getString(R.string.txt_copy_message));
         }
     };
 
     View.OnClickListener mOnClickSupportBtn = new View.OnClickListener() {
         public void onClick(View v) {
-            Context context = Configure.this;
+            Context context = getApplicationContext();
             //Prepare Email
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setData(Uri.parse("mailto:"));
@@ -167,14 +165,15 @@ public class Configure extends Activity {
                 startActivity(Intent.createChooser(emailIntent, context.getString(R.string.txt_email_chooser)));
                 finish();
             } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(context, context.getString(R.string.txt_email_error), Toast.LENGTH_SHORT).show();
+                App.Toast(context.getString(R.string.txt_email_error));
+
             }
         }
     };
 
     View.OnClickListener mOnClickSuggestBtn = new View.OnClickListener() {
         public void onClick(View v) {
-            String shareBody = App.get().getResources().getString(R.string.txt_Suggest_Message);
+            String shareBody = getApplicationContext().getResources().getString(R.string.txt_Suggest_Message);
 
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
@@ -183,19 +182,36 @@ public class Configure extends Activity {
         }
     };
 
-    void RepositionSpinner()
-    {
-        int pos = 0;
-        if(App.get().Get_UpdateRate() == App.get().getResources().getInteger(R.integer.int_UpdateFactor_Low))
-            pos = 0;
-        else if(App.get().Get_UpdateRate() == App.get().getResources().getInteger(R.integer.int_UpdateFactor_Med))
-            pos = 1;
-        else if(App.get().Get_UpdateRate() == App.get().getResources().getInteger(R.integer.int_UpdateFactor_Hi))
-            pos = 2;
+    private void UpdateSpinner() {
+        Context context = getApplicationContext();
+        int widgetUpdateRate = getWidgetUpdateRateFromPrefs();
 
-        Spinner tmpSpinner = (Spinner) findViewById(R.id.spinner);
-        tmpSpinner.setSelection(pos);
+        int spinnerPosition;
+        if (widgetUpdateRate == context.getResources().getInteger(R.integer.int_UpdateFactor_Low))
+            spinnerPosition = 0;
+        else if (widgetUpdateRate == context.getResources().getInteger(R.integer.int_UpdateFactor_Med))
+            spinnerPosition = 1;
+        else if (widgetUpdateRate == context.getResources().getInteger(R.integer.int_UpdateFactor_Hi))
+            spinnerPosition = 2;
+        else
+            spinnerPosition = 0;
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setSelection(spinnerPosition);
     }
 
+    private int getWidgetUpdateRateFromPrefs() {
+        Context context = App.getContext();
+        int widgetUpdateRate;
+        try {
+            widgetUpdateRate = SharedPrefs.LoadPref_Int(context, context.getString(R.string.txt_prefKey_Delay));
+        } catch (Exception e) {
+            widgetUpdateRate = -1;
+        }
+        if (widgetUpdateRate < 0) {
+            widgetUpdateRate = context.getResources().getInteger(R.integer.int_UpdateFactor_Low);
+        }
+        return widgetUpdateRate;
+    }
     //endregion
 }

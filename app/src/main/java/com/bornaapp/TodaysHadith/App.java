@@ -2,13 +2,13 @@ package com.bornaapp.TodaysHadith;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
+import android.widget.Toast;
 
 public class App extends Application {
 
     private static App instance = null;
 
-    private App() {
+    public App() {
         instance = this;
     }
 
@@ -23,11 +23,11 @@ public class App extends Application {
         // Singleton private instantiation
         new App();
     }
-    //////////////////-------------old------------------------------
 
-    public static App get(){
-    return instance;
+    public static void Toast(String message) {
+        Toast.makeText(instance, message, Toast.LENGTH_SHORT).show();
     }
+    //////////////////-------------old------------------------------
 
     private int widgetCount = 0;
 
