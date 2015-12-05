@@ -10,13 +10,8 @@ import android.content.Intent;
  */
 public class WidgetMessageSender {
 
-    private Context context;
-
-    public WidgetMessageSender(Context _context){
-        context = _context;
-    }
-
-    public void Broadcast(String message) {
+    public static void Broadcast(String message) {
+        Context context = App.getContext();
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetMessageReceiver.class.getName());
         Intent updateIntent = new Intent(context, WidgetMessageReceiver.class);

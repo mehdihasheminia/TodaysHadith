@@ -56,14 +56,15 @@ public class Timer {
 
     //private methods
     private static PendingIntent makeControlPendingIntent(String command, int appWidgetId) {
-        Intent intent = new Intent(App.getContext(), UpdateService.class);
+        Context context = App.getContext();
+        Intent intent = new Intent(context, UpdateService.class);
         intent.setAction(command);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         // The Uri data is to make the PendingIntent unique
         Uri uri = Uri.withAppendedPath(Uri.parse("bornaapAppWidget://widget/id/#" + command + appWidgetId),
                 String.valueOf(appWidgetId));
         intent.setData(uri);
-        return (PendingIntent.getService(App.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     private static void run(boolean status) {

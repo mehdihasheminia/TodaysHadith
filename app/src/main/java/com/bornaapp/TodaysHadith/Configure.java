@@ -50,7 +50,7 @@ public class Configure extends Activity {
         tmpSpinner.setOnItemSelectedListener(new SpinnerItemSelectListener());
 
         //deactivate appWidget
-        BroadcastPauseWidget();
+        WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_OPENED");
     }
 
     @Override
@@ -65,39 +65,32 @@ public class Configure extends Activity {
 
     @Override
     public void onStop() {
-        BroadcastResumeWidget();
+        WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CLOSED");
         super.onStop();
-    }
-    //endregion
-
-    //region Broadcasting methods
-    private void BroadcastPauseWidget() {
-        WidgetMessageSender messageSender = new WidgetMessageSender(this);
-        messageSender.Broadcast("com.bornaapp.appwidget.action.APPWIDGET_PAUSE");
-    }
-
-    private void BroadcastResumeWidget() {
-        WidgetMessageSender messageSender = new WidgetMessageSender(this);
-        messageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
     }
     //endregion
 
     //region User Interface
     private void UpdateTextView() {
-        String txt = RandomString.current();
-        String[] separated = txt.split("::");
+        try {
+            String txt = RandomString.current();
+            String[] separated = txt.split("::");
 
-        if (separated.length > 1)
-            txt = separated[0] + " " + separated[1];
+            if (separated.length > 1)
+                txt = separated[0] + " " + separated[1];
 
-        TextView textView = (TextView) findViewById(R.id.quoteTxtView2);
-        textView.setText(txt);
+            TextView textView = (TextView) findViewById(R.id.quoteTxtView2);
+            textView.setText(txt);
+        } catch (Exception e) {
+            return;
+        }
     }
 
     View.OnClickListener mOnClickNextBtn = new View.OnClickListener() {
         public void onClick(View v) {
             RandomString.next();
             UpdateTextView();
+            WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED");
         }
     };
 
@@ -105,6 +98,7 @@ public class Configure extends Activity {
         public void onClick(View v) {
             RandomString.previous();
             UpdateTextView();
+            WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED");
         }
     };
 
@@ -113,7 +107,7 @@ public class Configure extends Activity {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
 
-            String shareBody = RandomString.current(); //<--------------------------------------TODO!
+            String shareBody = RandomString.current();
             String[] separated = shareBody.split("::");
             if (separated.length > 1)
                 shareBody = separated[0] + " " + separated[1];
@@ -166,7 +160,6 @@ public class Configure extends Activity {
                 finish();
             } catch (android.content.ActivityNotFoundException ex) {
                 App.Toast(context.getString(R.string.txt_email_error));
-
             }
         }
     };
@@ -201,7 +194,7 @@ public class Configure extends Activity {
     }
 
     private int getWidgetUpdateRateFromPrefs() {
-        Context context = App.getContext();
+        Context context = getApplicationContext();
         int widgetUpdateRate;
         try {
             widgetUpdateRate = SharedPrefs.LoadPref_Int(context, context.getString(R.string.txt_prefKey_Delay));

@@ -15,7 +15,10 @@
         android:label="@string/app_name" >
         <intent-filter>
             <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            <action android:name="com.bornaapp.appwidget.action.APPWIDGET_PAUSE"/>
+            <action android:name="com.bornaapp.appwidget.action.APPWIDGET_TIMER_TICK"/>
+            <action android:name="com.bornaapp.appwidget.action.ACTIVITY_OPENED"/>
+            <action android:name="com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED"/>
+            <action android:name="com.bornaapp.appwidget.action.ACTIVITY_CLOSED"/>
         </intent-filter>
 
         <meta-data android:name="android.appwidget.provider"

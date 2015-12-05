@@ -12,12 +12,35 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        App.Toast("onReceive");
+        //1st time initialization
+        if (!RandomString.isInitialized())
+            RandomString.init();
+        if (!Timer.isInitialized()) {
+            Timer.init();
+            Timer.run();
+        }
 
-        // processing received intents
-        if (intent.getAction().equals("com.bornaapp.appwidget.action.APPWIDGET_PAUSE")) {
+        // processing arriving intents
+        if (intent.getAction().equals("com.bornaapp.appwidget.action.APPWIDGET_TIMER_TICK")) {
+            App.Toast("APPWIDGET_TIMER_TICK");
+
+            if (Timer.getElapsedMinutes() >= getWidgetUpdateRateFromPrefs()) {
+                RandomString.next();
+                Timer.reset();
+            }
+            Timer.Update();
+            Timer.run();
+            WidgetMessageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
+        } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_OPENED")) {
+            App.Toast("ACTIVITY_OPENED");
             Timer.pause();
-        } else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
+        } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED")) {
+            App.Toast("ACTIVITY_CONFIGURED");
+            Timer.pause();
+            Timer.reset();
+        } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_CLOSED")) {
+            App.Toast("ACTIVITY_CLOSED");
+            WidgetMessageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
             Timer.run();
         }
 
@@ -28,29 +51,13 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        App.Toast("onUpdate");
+        App.Toast("onUpdate:" + Integer.toString(Timer.getElapsedMinutes()) + " of " + Integer.toString(getWidgetUpdateRateFromPrefs()));
 
-        if (Timer.getElapsedMinutes() >= getWidgetUpdateRateFromPrefs()) {
-            Timer.reset();
-            RandomString.next();
-        }
         UpdateWidget(context, appWidgetManager, appWidgetIds);
-        Timer.Update();
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        App.Toast("onEnabled");
-        //1st time initialization
-        if (!RandomString.isInitialized())
-            RandomString.init();
-        if (!Timer.isInitialized())
-            Timer.init();
     }
 
     @Override
     public void onDisabled(Context context) {
-        App.Toast("onDisabled");
         Timer.pause();
         Timer.stop();
         super.onDisabled(context);
@@ -58,8 +65,6 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        App.Toast("onDeleted");
-//        App.get().WidgetCountChanged(appWidgetIds.length);
         super.onDeleted(context, appWidgetIds);
     }
 
@@ -79,7 +84,6 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     }
 
     private void UpdateWidget(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        App.Toast("UpdateWidget");
         //query each appWidget
         for (int widgetId : appWidgetIds) {
             //access remote view
