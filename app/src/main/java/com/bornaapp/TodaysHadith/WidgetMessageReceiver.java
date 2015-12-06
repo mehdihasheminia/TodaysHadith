@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 public class WidgetMessageReceiver extends AppWidgetProvider {
 
@@ -22,8 +23,8 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
 
         // processing arriving intents
         if (intent.getAction().equals("com.bornaapp.appwidget.action.APPWIDGET_TIMER_TICK")) {
-            App.Toast("APPWIDGET_TIMER_TICK");
 
+            Toast.makeText(App.getContext(), "APPWIDGET_TIMER_TICK", Toast.LENGTH_SHORT).show();
             if (Timer.getElapsedMinutes() >= getWidgetUpdateRateFromPrefs()) {
                 RandomString.next();
                 Timer.reset();
@@ -31,15 +32,21 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
             Timer.Update();
             Timer.run();
             WidgetMessageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
+
         } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_OPENED")) {
-            App.Toast("ACTIVITY_OPENED");
+
+            Toast.makeText(App.getContext(), "ACTIVITY_OPENED", Toast.LENGTH_SHORT).show();
             Timer.pause();
+
         } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED")) {
-            App.Toast("ACTIVITY_CONFIGURED");
+
+            Toast.makeText(App.getContext(), "ACTIVITY_CONFIGURED", Toast.LENGTH_SHORT).show();
             Timer.pause();
             Timer.reset();
+
         } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_CLOSED")) {
-            App.Toast("ACTIVITY_CLOSED");
+
+            Toast.makeText(App.getContext(), "ACTIVITY_CLOSED", Toast.LENGTH_SHORT).show();
             WidgetMessageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
             Timer.run();
         }
@@ -51,7 +58,7 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        App.Toast("onUpdate:" + Integer.toString(Timer.getElapsedMinutes()) + " of " + Integer.toString(getWidgetUpdateRateFromPrefs()));
+        Toast.makeText(App.getContext(), "onUpdate:" + Integer.toString(Timer.getElapsedMinutes()) + " of " + Integer.toString(getWidgetUpdateRateFromPrefs()), Toast.LENGTH_SHORT).show();
 
         UpdateWidget(context, appWidgetManager, appWidgetIds);
     }

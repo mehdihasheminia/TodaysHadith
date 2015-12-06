@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.net.Uri;
+import android.widget.Toast;
 
 public class Configure extends Activity {
 
@@ -139,7 +140,7 @@ public class Configure extends Activity {
                 }
             }
             //Let user know
-            App.Toast(getApplicationContext().getString(R.string.txt_copy_message));
+            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.txt_copy_message), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -159,7 +160,7 @@ public class Configure extends Activity {
                 startActivity(Intent.createChooser(emailIntent, context.getString(R.string.txt_email_chooser)));
                 finish();
             } catch (android.content.ActivityNotFoundException ex) {
-                App.Toast(context.getString(R.string.txt_email_error));
+                Toast.makeText(context, context.getString(R.string.txt_email_error), Toast.LENGTH_SHORT).show();
             }
         }
     };

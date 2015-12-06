@@ -20,8 +20,4 @@ public class App extends Application {
     public static Context getContext() {
         return instance.getApplicationContext();
     }
-
-    public static void Toast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
 }
