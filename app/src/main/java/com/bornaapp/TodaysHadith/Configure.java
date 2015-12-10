@@ -34,9 +34,6 @@ public class Configure extends Activity {
         // Set our layout for the Configure Activity
         setContentView(R.layout.configurelayout);
 
-        //Update configuration UI
-        UpdateTextView();
-
         // Bind the action for the buttons.
         findViewById(R.id.nextBtn).setOnClickListener(mOnClickNextBtn);
         findViewById(R.id.PreviousBtn).setOnClickListener(mOnClickPrevBtn);
@@ -44,6 +41,14 @@ public class Configure extends Activity {
         findViewById(R.id.shareBtn).setOnClickListener(mOnClickShareBtn);
         findViewById(R.id.supportBtn).setOnClickListener(mOnClickSupportBtn);
         findViewById(R.id.suggestBtn).setOnClickListener(mOnClickSuggestBtn);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //Update configuration UI
+        UpdateTextView();
 
         // Bind the action for the Spinner.
         UpdateSpinner();
@@ -55,36 +60,23 @@ public class Configure extends Activity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-    }
-
-    @Override
-    public void onStop() {
         WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CLOSED");
-        super.onStop();
     }
     //endregion
 
     //region User Interface
     private void UpdateTextView() {
-        try {
-            String txt = RandomString.current();
-            String[] separated = txt.split("::");
 
-            if (separated.length > 1)
-                txt = separated[0] + " " + separated[1];
+        String txt = RandomString.current();
+        String[] separated = txt.split("::");
 
-            TextView textView = (TextView) findViewById(R.id.quoteTxtView2);
-            textView.setText(txt);
-        } catch (Exception e) {
-            return;
-        }
+        if (separated.length > 1)
+            txt = separated[0] + " " + separated[1];
+
+        TextView textView = (TextView) findViewById(R.id.quoteTxtView2);
+        textView.setText(txt);
     }
 
     View.OnClickListener mOnClickNextBtn = new View.OnClickListener() {
@@ -100,22 +92,6 @@ public class Configure extends Activity {
             RandomString.previous();
             UpdateTextView();
             WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED");
-        }
-    };
-
-    View.OnClickListener mOnClickShareBtn = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-            sharingIntent.setType("text/plain");
-
-            String shareBody = RandomString.current();
-            String[] separated = shareBody.split("::");
-            if (separated.length > 1)
-                shareBody = separated[0] + " " + separated[1];
-
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.app_name);
-            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-            startActivity(Intent.createChooser(sharingIntent, "Share via"));
         }
     };
 
@@ -144,6 +120,28 @@ public class Configure extends Activity {
         }
     };
 
+    View.OnClickListener mOnClickShareBtn = new View.OnClickListener() {
+        public void onClick(View v) {
+            Context context = getApplicationContext();
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+
+            String shareBody = RandomString.current();
+            String[] separated = shareBody.split("::");
+            if (separated.length > 1)
+                shareBody = separated[0] + " " + separated[1];
+
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.app_name);
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+
+            try {
+                startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.txt_share_chooser)));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(context, context.getString(R.string.txt_share_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
     View.OnClickListener mOnClickSupportBtn = new View.OnClickListener() {
         public void onClick(View v) {
             Context context = getApplicationContext();
@@ -158,7 +156,6 @@ public class Configure extends Activity {
             //Send Email
             try {
                 startActivity(Intent.createChooser(emailIntent, context.getString(R.string.txt_email_chooser)));
-                finish();
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(context, context.getString(R.string.txt_email_error), Toast.LENGTH_SHORT).show();
             }
@@ -167,12 +164,18 @@ public class Configure extends Activity {
 
     View.OnClickListener mOnClickSuggestBtn = new View.OnClickListener() {
         public void onClick(View v) {
-            String shareBody = getApplicationContext().getResources().getString(R.string.txt_Suggest_Message);
+            Context context = getApplicationContext();
+            String shareBody = context.getResources().getString(R.string.txt_Suggest_Message);
 
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+            try {
+                startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.txt_suggest_chooser)));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(context, context.getString(R.string.txt_suggest_error), Toast.LENGTH_SHORT).show();
+            }
         }
     };
 

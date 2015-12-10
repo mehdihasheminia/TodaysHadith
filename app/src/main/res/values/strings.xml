@@ -26,6 +26,10 @@
     <string name="txt_Developer_URL">https://cafebazaar.ir/developer/bornaapp/</string>
     <string name="txt_email_chooser">ارسال ایمیل</string>
     <string name="txt_email_error">برنامه ای برای ارسال ایمیل نصب نشده است</string>
+    <string name="txt_share_chooser">پیشنهاد از طریق</string>
+    <string name="txt_suggest_chooser">ارسال از طریق</string>
+    <string name="txt_share_error">برنامه ای برای اشتراگ گذاری نصب نشده است</string>
+    <string name="txt_suggest_error">برنامه ای برای اشتراک گذاری نصب نشده است</string>
 
     <string name="txt_widgetStart">برای راه اندازی لمس کنید</string>
 

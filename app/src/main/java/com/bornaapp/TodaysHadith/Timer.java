@@ -37,7 +37,7 @@ public class Timer {
         run(false);
     }
 
-    public static void stop(){
+    public static void stop() {
         Context context = App.getContext();
         context.stopService(new Intent(context, UpdateService.class));
     }
@@ -50,7 +50,7 @@ public class Timer {
         return instance.elapsedMinutes;
     }
 
-    public static void reset(){
+    public static void reset() {
         instance.elapsedMinutes = 0;
     }
 
