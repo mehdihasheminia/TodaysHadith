@@ -1,4 +1,4 @@
-package com.bornaapp.TodaysHadith;
+package com.bornapp.TodaysHadith;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -21,7 +21,7 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
         }
 
         // processing arriving intents
-        if (intent.getAction().equals("com.bornaapp.appwidget.action.APPWIDGET_TIMER_TICK")) {
+        if (intent.getAction().equals("com.bornapp.appwidget.action.APPWIDGET_TIMER_TICK")) {
 
             if (Timer.getElapsedMinutes() >= getWidgetUpdateRateFromPrefs()) {
                 RandomString.next();
@@ -31,16 +31,16 @@ public class WidgetMessageReceiver extends AppWidgetProvider {
             Timer.run();
             WidgetMessageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
 
-        } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_OPENED")) {
+        } else if (intent.getAction().equals("com.bornapp.appwidget.action.ACTIVITY_OPENED")) {
 
             Timer.pause();
 
-        } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED")) {
+        } else if (intent.getAction().equals("com.bornapp.appwidget.action.ACTIVITY_CONFIGURED")) {
 
             Timer.pause();
             Timer.reset();
 
-        } else if (intent.getAction().equals("com.bornaapp.appwidget.action.ACTIVITY_CLOSED")) {
+        } else if (intent.getAction().equals("com.bornapp.appwidget.action.ACTIVITY_CLOSED")) {
 
             WidgetMessageSender.Broadcast("android.appwidget.action.APPWIDGET_UPDATE");
             Timer.run();

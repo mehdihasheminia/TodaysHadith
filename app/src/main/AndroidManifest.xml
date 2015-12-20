@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bornaapp.TodaysHadith">
+    package="com.bornapp.TodaysHadith">
 
 <application
-    android:name=".App"
+    android:name="com.bornapp.TodaysHadith.App"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:theme="@style/AppTheme" >
 
     <receiver
-        android:name=".WidgetMessageReceiver"
+        android:name="com.bornapp.TodaysHadith.WidgetMessageReceiver"
         android:label="@string/app_name" >
         <intent-filter>
             <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -26,10 +26,10 @@
         </meta-data>
     </receiver>
 
-    <activity android:name=".Configure">
+    <activity android:name="com.bornapp.TodaysHadith.Configure">
     </activity>
 
-    <service android:name=".UpdateService" >
+    <service android:name="com.bornapp.TodaysHadith.UpdateService" >
     </service>
 
 </application>

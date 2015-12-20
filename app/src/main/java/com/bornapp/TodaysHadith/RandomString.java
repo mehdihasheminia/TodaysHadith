@@ -1,4 +1,4 @@
-package com.bornaapp.TodaysHadith;
+package com.bornapp.TodaysHadith;
 
 import java.util.ArrayList;
 import java.util.Collections;

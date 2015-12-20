@@ -1,4 +1,4 @@
-package com.bornaapp.TodaysHadith;
+package com.bornapp.TodaysHadith;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

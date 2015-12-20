@@ -1,4 +1,4 @@
-package com.bornaapp.TodaysHadith;
+package com.bornapp.TodaysHadith;
 
 import android.app.Service;
 import android.content.Intent;
@@ -10,7 +10,7 @@ public class UpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.APPWIDGET_TIMER_TICK");
+        WidgetMessageSender.Broadcast("com.bornapp.appwidget.action.APPWIDGET_TIMER_TICK");
         //int passedID = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,-1);
 
         return START_STICKY;

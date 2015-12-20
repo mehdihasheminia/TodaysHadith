@@ -1,4 +1,4 @@
-package com.bornaapp.TodaysHadith;
+package com.bornapp.TodaysHadith;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -56,13 +56,13 @@ public class Configure extends Activity {
         tmpSpinner.setOnItemSelectedListener(new SpinnerItemSelectListener());
 
         //deactivate appWidget
-        WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_OPENED");
+        WidgetMessageSender.Broadcast("com.bornapp.appwidget.action.ACTIVITY_OPENED");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CLOSED");
+        WidgetMessageSender.Broadcast("com.bornapp.appwidget.action.ACTIVITY_CLOSED");
     }
     //endregion
 
@@ -83,7 +83,7 @@ public class Configure extends Activity {
         public void onClick(View v) {
             RandomString.next();
             UpdateTextView();
-            WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED");
+            WidgetMessageSender.Broadcast("com.bornapp.appwidget.action.ACTIVITY_CONFIGURED");
         }
     };
 
@@ -91,7 +91,7 @@ public class Configure extends Activity {
         public void onClick(View v) {
             RandomString.previous();
             UpdateTextView();
-            WidgetMessageSender.Broadcast("com.bornaapp.appwidget.action.ACTIVITY_CONFIGURED");
+            WidgetMessageSender.Broadcast("com.bornapp.appwidget.action.ACTIVITY_CONFIGURED");
         }
     };
 
